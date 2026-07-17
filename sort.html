@@ -22,6 +22,12 @@
       <div id="category-board" class="board"></div>
     </div>
 
+    <p id="empty-board-hint" style="display: none;">Add at least one category to get started.</p>
+    <div id="add-category-form" style="display: none;">
+      <input type="text" id="new-category-label" placeholder="New category name" autocomplete="off">
+      <button id="add-category-button" type="button">Add Category</button>
+    </div>
+
     <button id="submit-button" disabled>Submit</button>
   </div>
 
@@ -36,9 +42,9 @@
   <script>
     const HARDCODED_CONFIG = {
       version: 1,
-      studyName: "Sample Closed Sort",
-      mode: "closed",
-      instructions: "Sort these cards into the categories on the right.",
+      studyName: "Sample Open Sort",
+      mode: "open",
+      instructions: "Create your own categories, then sort these cards into them.",
       cards: [
         { id: "c1", label: "Account Settings" },
         { id: "c2", label: "Billing History" },
@@ -47,12 +53,8 @@
         { id: "c5", label: "Download Invoice" },
         { id: "c6", label: "Update Payment Method" }
       ],
-      categories: [
-        { id: "cat1", label: "Account" },
-        { id: "cat2", label: "Billing" },
-        { id: "cat3", label: "Help" }
-      ],
-      allowParticipantCategories: false
+      categories: [],
+      allowParticipantCategories: true
     };
 
     const elements = {
@@ -60,8 +62,16 @@
       instructionsEl: document.getElementById("instructions"),
       pileEl: document.getElementById("card-pile"),
       boardEl: document.getElementById("category-board"),
-      submitButtonEl: document.getElementById("submit-button")
+      submitButtonEl: document.getElementById("submit-button"),
+      addCategoryFormEl: document.getElementById("add-category-form"),
+      emptyBoardHintEl: document.getElementById("empty-board-hint")
     };
+
+    document.getElementById("add-category-button").addEventListener("click", function () {
+      const input = document.getElementById("new-category-label");
+      addParticipantCategory(input.value);
+      input.value = "";
+    });
 
     let participantId = "";
     let startedAt = null;

@@ -63,6 +63,19 @@ h1 {
   box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.3);
 }
 
+#empty-board-hint {
+  color: #666;
+}
+
+#add-category-form {
+  margin-bottom: 1rem;
+}
+
+#add-category-form input {
+  padding: 0.4rem;
+  margin-right: 0.5rem;
+}
+
 #submit-button {
   margin-top: 1.5rem;
   padding: 0.6rem 1.2rem;

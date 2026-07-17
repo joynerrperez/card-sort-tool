@@ -2,12 +2,14 @@ let placements = {}; // cardId -> { cardId, cardLabel, categoryId, categoryLabel
 let selectedCardEl = null;
 let engineElements = null;
 let engineConfig = null;
+let participantCategoryCounter = 0;
 
 function renderSort(config, elements) {
   engineConfig = config;
   engineElements = elements;
   placements = {};
   selectedCardEl = null;
+  participantCategoryCounter = 0;
 
   elements.studyNameEl.textContent = config.studyName;
   elements.instructionsEl.textContent = config.instructions || "";
@@ -22,7 +24,28 @@ function renderSort(config, elements) {
     elements.boardEl.appendChild(buildCategoryColumn(category, "researcher"));
   });
 
+  if (elements.addCategoryFormEl) {
+    elements.addCategoryFormEl.style.display = config.allowParticipantCategories ? "block" : "none";
+  }
+
+  updateEmptyBoardHint();
   updateSubmitState();
+}
+
+function addParticipantCategory(label) {
+  const trimmed = (label || "").trim();
+  if (!trimmed) return;
+
+  participantCategoryCounter += 1;
+  const category = { id: "participant-cat-" + participantCategoryCounter, label: trimmed };
+  engineElements.boardEl.appendChild(buildCategoryColumn(category, "participant"));
+  updateEmptyBoardHint();
+}
+
+function updateEmptyBoardHint() {
+  if (!engineElements.emptyBoardHintEl) return;
+  const hasCategories = engineElements.boardEl.querySelector(".category-column") !== null;
+  engineElements.emptyBoardHintEl.style.display = hasCategories ? "none" : "block";
 }
 
 function buildCardElement(card) {
