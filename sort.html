@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Card Sort</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <h1 id="study-name"></h1>
+  <p id="instructions"></p>
+
+  <div class="board">
+    <div id="card-pile"></div>
+    <div id="category-board" class="board"></div>
+  </div>
+
+  <script src="js/studyConfig.js"></script>
+  <script src="js/sortEngine.js"></script>
+  <script>
+    const HARDCODED_CONFIG = {
+      version: 1,
+      studyName: "Sample Closed Sort",
+      mode: "closed",
+      instructions: "Sort these cards into the categories on the right.",
+      cards: [
+        { id: "c1", label: "Account Settings" },
+        { id: "c2", label: "Billing History" },
+        { id: "c3", label: "Change Password" },
+        { id: "c4", label: "Contact Support" },
+        { id: "c5", label: "Download Invoice" },
+        { id: "c6", label: "Update Payment Method" }
+      ],
+      categories: [
+        { id: "cat1", label: "Account" },
+        { id: "cat2", label: "Billing" },
+        { id: "cat3", label: "Help" }
+      ],
+      allowParticipantCategories: false
+    };
+
+    const elements = {
+      studyNameEl: document.getElementById("study-name"),
+      instructionsEl: document.getElementById("instructions"),
+      pileEl: document.getElementById("card-pile"),
+      boardEl: document.getElementById("category-board")
+    };
+
+    renderSort(HARDCODED_CONFIG, elements);
+  </script>
+</body>
+</html>

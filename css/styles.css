@@ -1,0 +1,64 @@
+body {
+  font-family: system-ui, sans-serif;
+  margin: 0;
+  padding: 1.5rem;
+  color: #1a1a1a;
+}
+
+h1 {
+  margin-top: 0;
+}
+
+#instructions {
+  color: #444;
+  margin-bottom: 1.5rem;
+}
+
+.board {
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+#card-pile {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-width: 220px;
+  padding: 1rem;
+  background: #f4f4f4;
+  border-radius: 8px;
+}
+
+.category-column {
+  min-width: 220px;
+  padding: 1rem;
+  background: #eef4ff;
+  border-radius: 8px;
+}
+
+.category-column h3 {
+  margin-top: 0;
+}
+
+.category-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-height: 40px;
+}
+
+.card {
+  padding: 0.6rem 0.8rem;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.card.selected {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.3);
+}
