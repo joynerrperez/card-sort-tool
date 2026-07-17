@@ -1,8 +1,27 @@
+* {
+  box-sizing: border-box;
+}
+
 body {
   font-family: system-ui, sans-serif;
   margin: 0;
   padding: 1.5rem;
   color: #1a1a1a;
+}
+
+input[type="text"], textarea {
+  max-width: 100%;
+}
+
+.wide-input {
+  width: 100%;
+  max-width: 500px;
+  padding: 0.4rem;
+}
+
+.card:focus, .category-column:focus, button:focus {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
 }
 
 h1 {
@@ -114,4 +133,31 @@ h1 {
   padding: 1rem;
   border-radius: 8px;
   overflow-x: auto;
+}
+
+#copy-link-button {
+  margin-top: 0.5rem;
+  padding: 0.4rem 0.8rem;
+  cursor: pointer;
+}
+
+#copy-confirmation {
+  margin-left: 0.5rem;
+  color: #15803d;
+}
+
+#link-length-warning {
+  color: #b45309;
+  max-width: 500px;
+}
+
+@media (max-width: 480px) {
+  body {
+    padding: 1rem;
+  }
+
+  #card-pile, .category-column {
+    min-width: 0;
+    width: 100%;
+  }
 }

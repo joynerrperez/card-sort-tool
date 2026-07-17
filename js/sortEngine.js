@@ -53,10 +53,23 @@ function buildCardElement(card) {
   cardEl.className = "card";
   cardEl.dataset.cardId = card.id;
   cardEl.textContent = card.label;
-  cardEl.addEventListener("click", function (event) {
+  cardEl.tabIndex = 0;
+  cardEl.setAttribute("role", "button");
+  cardEl.setAttribute("aria-pressed", "false");
+
+  function activate(event) {
     event.stopPropagation();
     selectCard(cardEl);
+  }
+
+  cardEl.addEventListener("click", activate);
+  cardEl.addEventListener("keydown", function (event) {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      activate(event);
+    }
   });
+
   return cardEl;
 }
 
@@ -64,6 +77,9 @@ function buildCategoryColumn(category, categorySource) {
   const columnEl = document.createElement("div");
   columnEl.className = "category-column";
   columnEl.dataset.categoryId = category.id;
+  columnEl.tabIndex = 0;
+  columnEl.setAttribute("role", "button");
+  columnEl.setAttribute("aria-label", "Place selected card in " + category.label);
 
   const headerEl = document.createElement("h3");
   headerEl.textContent = category.label;
@@ -73,8 +89,16 @@ function buildCategoryColumn(category, categorySource) {
   cardsEl.className = "category-cards";
   columnEl.appendChild(cardsEl);
 
-  columnEl.addEventListener("click", function () {
+  function place() {
     placeSelectedCard(category.id, category.label, categorySource, cardsEl);
+  }
+
+  columnEl.addEventListener("click", place);
+  columnEl.addEventListener("keydown", function (event) {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      place();
+    }
   });
 
   return columnEl;
@@ -83,14 +107,17 @@ function buildCategoryColumn(category, categorySource) {
 function selectCard(cardEl) {
   if (selectedCardEl === cardEl) {
     selectedCardEl.classList.remove("selected");
+    selectedCardEl.setAttribute("aria-pressed", "false");
     selectedCardEl = null;
     return;
   }
   if (selectedCardEl) {
     selectedCardEl.classList.remove("selected");
+    selectedCardEl.setAttribute("aria-pressed", "false");
   }
   selectedCardEl = cardEl;
   cardEl.classList.add("selected");
+  cardEl.setAttribute("aria-pressed", "true");
 }
 
 function placeSelectedCard(categoryId, categoryLabel, categorySource, cardsEl) {
@@ -101,6 +128,7 @@ function placeSelectedCard(categoryId, categoryLabel, categorySource, cardsEl) {
   placements[cardId] = { cardId, cardLabel, categoryId, categoryLabel, categorySource };
 
   selectedCardEl.classList.remove("selected");
+  selectedCardEl.setAttribute("aria-pressed", "false");
   cardsEl.appendChild(selectedCardEl);
   selectedCardEl = null;
 

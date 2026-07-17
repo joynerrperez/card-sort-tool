@@ -5,6 +5,7 @@ function addListRow(containerEl, placeholder) {
   const inputEl = document.createElement("input");
   inputEl.type = "text";
   inputEl.placeholder = placeholder;
+  inputEl.setAttribute("aria-label", placeholder);
   rowEl.appendChild(inputEl);
 
   const removeButtonEl = document.createElement("button");
@@ -96,8 +97,40 @@ document.getElementById("generate-button").addEventListener("click", function ()
   document.getElementById("config-preview-json").textContent = JSON.stringify(config, null, 2);
   previewEl.style.display = "block";
 
-  document.getElementById("shareable-link").value = encodeConfigToUrl(config);
+  const link = encodeConfigToUrl(config);
+  document.getElementById("shareable-link").value = link;
   linkSectionEl.style.display = "block";
+
+  const LINK_LENGTH_WARNING_THRESHOLD = 2000;
+  const warningEl = document.getElementById("link-length-warning");
+  if (link.length > LINK_LENGTH_WARNING_THRESHOLD) {
+    warningEl.textContent = "This link is " + link.length + " characters long. Very long links can " +
+      "break when pasted into some email or chat apps. If participants report the link not working, " +
+      "try reducing the number of cards or categories.";
+    warningEl.style.display = "block";
+  } else {
+    warningEl.style.display = "none";
+  }
+});
+
+document.getElementById("copy-link-button").addEventListener("click", function () {
+  const linkInputEl = document.getElementById("shareable-link");
+  const confirmationEl = document.getElementById("copy-confirmation");
+
+  function showConfirmation() {
+    confirmationEl.style.display = "inline";
+    setTimeout(function () {
+      confirmationEl.style.display = "none";
+    }, 2000);
+  }
+
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(linkInputEl.value).then(showConfirmation);
+  } else {
+    linkInputEl.select();
+    document.execCommand("copy");
+    showConfirmation();
+  }
 });
 
 for (let i = 0; i < 2; i++) {

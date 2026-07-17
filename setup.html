@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Create a New Study</title>
   <link rel="stylesheet" href="css/styles.css">
 </head>
@@ -12,7 +13,7 @@
   <input type="text" id="study-name-input"><br><br>
 
   <label for="instructions-input">Instructions for participants (optional)</label><br>
-  <textarea id="instructions-input" rows="2" cols="50"></textarea><br><br>
+  <textarea id="instructions-input" rows="2" class="wide-input"></textarea><br><br>
 
   <fieldset>
     <legend>Sort mode</legend>
@@ -39,7 +40,10 @@
   <div id="link-section" style="display: none;">
     <h2>Shareable link</h2>
     <p>Send this link to participants. Anyone who opens it can run this exact study.</p>
-    <input type="text" id="shareable-link" readonly style="width: 100%;">
+    <input type="text" id="shareable-link" readonly aria-label="Shareable link" class="wide-input">
+    <button type="button" id="copy-link-button">Copy Link</button>
+    <span id="copy-confirmation" role="status" style="display: none;">Copied!</span>
+    <p id="link-length-warning" style="display: none;"></p>
   </div>
 
   <div id="config-preview" style="display: none;">
