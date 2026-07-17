@@ -30,7 +30,8 @@ function buildCardElement(card) {
   cardEl.className = "card";
   cardEl.dataset.cardId = card.id;
   cardEl.textContent = card.label;
-  cardEl.addEventListener("click", function () {
+  cardEl.addEventListener("click", function (event) {
+    event.stopPropagation();
     selectCard(cardEl);
   });
   return cardEl;
