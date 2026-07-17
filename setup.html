@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Create a New Study</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <h1>Create a New Study</h1>
+
+  <label for="study-name-input">Study name</label><br>
+  <input type="text" id="study-name-input"><br><br>
+
+  <label for="instructions-input">Instructions for participants (optional)</label><br>
+  <textarea id="instructions-input" rows="2" cols="50"></textarea><br><br>
+
+  <fieldset>
+    <legend>Sort mode</legend>
+    <label><input type="radio" name="mode" value="closed" checked> Closed &mdash; you provide the categories</label><br>
+    <label><input type="radio" name="mode" value="open"> Open &mdash; participants create their own categories</label><br>
+    <label><input type="radio" name="mode" value="hybrid"> Hybrid &mdash; you provide starter categories, participants can add more</label>
+  </fieldset>
+
+  <h2>Cards</h2>
+  <div id="cards-list"></div>
+  <button type="button" id="add-card-button">Add Card</button>
+
+  <div id="categories-section">
+    <h2>Categories</h2>
+    <div id="categories-list"></div>
+    <button type="button" id="add-category-button">Add Category</button>
+  </div>
+
+  <br><br>
+  <button type="button" id="generate-button">Generate Study Config</button>
+
+  <div id="setup-errors" style="display: none;"></div>
+
+  <div id="config-preview" style="display: none;">
+    <h2>Study Configuration (preview)</h2>
+    <pre id="config-preview-json"></pre>
+  </div>
+
+  <script src="js/studyConfig.js"></script>
+  <script src="js/setup.js"></script>
+</body>
+</html>
