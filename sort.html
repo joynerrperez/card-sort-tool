@@ -14,6 +14,8 @@
     <div id="category-board" class="board"></div>
   </div>
 
+  <button id="submit-button" disabled>Submit</button>
+
   <script src="js/studyConfig.js"></script>
   <script src="js/sortEngine.js"></script>
   <script>
@@ -42,7 +44,8 @@
       studyNameEl: document.getElementById("study-name"),
       instructionsEl: document.getElementById("instructions"),
       pileEl: document.getElementById("card-pile"),
-      boardEl: document.getElementById("category-board")
+      boardEl: document.getElementById("category-board"),
+      submitButtonEl: document.getElementById("submit-button")
     };
 
     renderSort(HARDCODED_CONFIG, elements);

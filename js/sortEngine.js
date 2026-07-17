@@ -1,23 +1,42 @@
+let placements = {}; // cardId -> { cardId, cardLabel, categoryId, categoryLabel, categorySource }
+let selectedCardEl = null;
+let engineElements = null;
+let engineConfig = null;
+
 function renderSort(config, elements) {
+  engineConfig = config;
+  engineElements = elements;
+  placements = {};
+  selectedCardEl = null;
+
   elements.studyNameEl.textContent = config.studyName;
   elements.instructionsEl.textContent = config.instructions || "";
 
   elements.pileEl.innerHTML = "";
   config.cards.forEach(function (card) {
-    const cardEl = document.createElement("div");
-    cardEl.className = "card";
-    cardEl.dataset.cardId = card.id;
-    cardEl.textContent = card.label;
-    elements.pileEl.appendChild(cardEl);
+    elements.pileEl.appendChild(buildCardElement(card));
   });
 
   elements.boardEl.innerHTML = "";
   config.categories.forEach(function (category) {
-    elements.boardEl.appendChild(buildCategoryColumn(category));
+    elements.boardEl.appendChild(buildCategoryColumn(category, "researcher"));
   });
+
+  updateSubmitState();
 }
 
-function buildCategoryColumn(category) {
+function buildCardElement(card) {
+  const cardEl = document.createElement("div");
+  cardEl.className = "card";
+  cardEl.dataset.cardId = card.id;
+  cardEl.textContent = card.label;
+  cardEl.addEventListener("click", function () {
+    selectCard(cardEl);
+  });
+  return cardEl;
+}
+
+function buildCategoryColumn(category, categorySource) {
   const columnEl = document.createElement("div");
   columnEl.className = "category-column";
   columnEl.dataset.categoryId = category.id;
@@ -30,5 +49,48 @@ function buildCategoryColumn(category) {
   cardsEl.className = "category-cards";
   columnEl.appendChild(cardsEl);
 
+  columnEl.addEventListener("click", function () {
+    placeSelectedCard(category.id, category.label, categorySource, cardsEl);
+  });
+
   return columnEl;
+}
+
+function selectCard(cardEl) {
+  if (selectedCardEl === cardEl) {
+    selectedCardEl.classList.remove("selected");
+    selectedCardEl = null;
+    return;
+  }
+  if (selectedCardEl) {
+    selectedCardEl.classList.remove("selected");
+  }
+  selectedCardEl = cardEl;
+  cardEl.classList.add("selected");
+}
+
+function placeSelectedCard(categoryId, categoryLabel, categorySource, cardsEl) {
+  if (!selectedCardEl) return;
+
+  const cardId = selectedCardEl.dataset.cardId;
+  const cardLabel = selectedCardEl.textContent;
+  placements[cardId] = { cardId, cardLabel, categoryId, categoryLabel, categorySource };
+
+  selectedCardEl.classList.remove("selected");
+  cardsEl.appendChild(selectedCardEl);
+  selectedCardEl = null;
+
+  updateSubmitState();
+}
+
+function updateSubmitState() {
+  if (!engineElements.submitButtonEl) return;
+  const allPlaced = engineConfig.cards.every(function (card) {
+    return Boolean(placements[card.id]);
+  });
+  engineElements.submitButtonEl.disabled = !allPlaced;
+}
+
+function getPlacements() {
+  return Object.values(placements);
 }
