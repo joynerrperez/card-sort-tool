@@ -89,6 +89,11 @@ function buildCategoryColumn(category, categorySource) {
   cardsEl.className = "category-cards";
   columnEl.appendChild(cardsEl);
 
+  const dropZoneEl = document.createElement("div");
+  dropZoneEl.className = "drop-zone";
+  dropZoneEl.textContent = "Place selected card here";
+  cardsEl.appendChild(dropZoneEl);
+
   function place() {
     placeSelectedCard(category.id, category.label, categorySource, cardsEl);
   }
