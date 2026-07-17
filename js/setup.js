@@ -80,6 +80,7 @@ document.getElementById("generate-button").addEventListener("click", function ()
 
   const errorsEl = document.getElementById("setup-errors");
   const previewEl = document.getElementById("config-preview");
+  const linkSectionEl = document.getElementById("link-section");
 
   if (!result.valid) {
     errorsEl.innerHTML = "<ul>" + result.errors.map(function (error) {
@@ -87,12 +88,16 @@ document.getElementById("generate-button").addEventListener("click", function ()
     }).join("") + "</ul>";
     errorsEl.style.display = "block";
     previewEl.style.display = "none";
+    linkSectionEl.style.display = "none";
     return;
   }
 
   errorsEl.style.display = "none";
   document.getElementById("config-preview-json").textContent = JSON.stringify(config, null, 2);
   previewEl.style.display = "block";
+
+  document.getElementById("shareable-link").value = encodeConfigToUrl(config);
+  linkSectionEl.style.display = "block";
 });
 
 for (let i = 0; i < 2; i++) {

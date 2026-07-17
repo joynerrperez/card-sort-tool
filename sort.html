@@ -6,6 +6,11 @@
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
+  <div id="error-view" style="display: none;">
+    <h1>This link looks invalid or incomplete</h1>
+    <p>Please ask whoever sent you this link to send it again, or check that the whole link was copied.</p>
+  </div>
+
   <div id="name-entry-view">
     <h1>Before you start</h1>
     <label for="participant-id">Your name or ID</label><br>
@@ -37,82 +42,71 @@
   </div>
 
   <script src="js/studyConfig.js"></script>
+  <script src="js/urlConfig.js"></script>
   <script src="js/sortEngine.js"></script>
   <script src="js/exportResults.js"></script>
   <script>
-    const HARDCODED_CONFIG = {
-      version: 1,
-      studyName: "Sample Hybrid Sort",
-      mode: "hybrid",
-      instructions: "Sort these cards into the categories provided, or add your own if none fit.",
-      cards: [
-        { id: "c1", label: "Account Settings" },
-        { id: "c2", label: "Billing History" },
-        { id: "c3", label: "Change Password" },
-        { id: "c4", label: "Contact Support" },
-        { id: "c5", label: "Download Invoice" },
-        { id: "c6", label: "Update Payment Method" }
-      ],
-      categories: [
-        { id: "cat1", label: "Account" },
-        { id: "cat2", label: "Billing" }
-      ],
-      allowParticipantCategories: true
-    };
+    const studyConfig = decodeConfigFromUrl();
+    const configCheck = studyConfig ? validateStudyConfig(studyConfig) : { valid: false };
 
-    const elements = {
-      studyNameEl: document.getElementById("study-name"),
-      instructionsEl: document.getElementById("instructions"),
-      pileEl: document.getElementById("card-pile"),
-      boardEl: document.getElementById("category-board"),
-      submitButtonEl: document.getElementById("submit-button"),
-      addCategoryFormEl: document.getElementById("add-category-form"),
-      emptyBoardHintEl: document.getElementById("empty-board-hint")
-    };
-
-    document.getElementById("add-category-button").addEventListener("click", function () {
-      const input = document.getElementById("new-category-label");
-      addParticipantCategory(input.value);
-      input.value = "";
-    });
-
-    let participantId = "";
-    let startedAt = null;
-
-    document.getElementById("start-button").addEventListener("click", function () {
-      const input = document.getElementById("participant-id").value.trim();
-      if (!input) {
-        alert("Please enter your name or ID before starting.");
-        return;
-      }
-      participantId = input;
-      startedAt = new Date().toISOString();
-
+    if (!configCheck.valid) {
       document.getElementById("name-entry-view").style.display = "none";
-      document.getElementById("sort-view").style.display = "block";
-
-      renderSort(HARDCODED_CONFIG, elements);
-    });
-
-    elements.submitButtonEl.addEventListener("click", function () {
-      const completedAt = new Date().toISOString();
-      const durationSeconds = Math.round((new Date(completedAt) - new Date(startedAt)) / 1000);
-
-      const sortResult = {
-        studyName: HARDCODED_CONFIG.studyName,
-        mode: HARDCODED_CONFIG.mode,
-        participantId: participantId,
-        startedAt: startedAt,
-        completedAt: completedAt,
-        durationSeconds: durationSeconds,
-        placements: getPlacements()
+      document.getElementById("error-view").style.display = "block";
+    } else {
+      const elements = {
+        studyNameEl: document.getElementById("study-name"),
+        instructionsEl: document.getElementById("instructions"),
+        pileEl: document.getElementById("card-pile"),
+        boardEl: document.getElementById("category-board"),
+        submitButtonEl: document.getElementById("submit-button"),
+        addCategoryFormEl: document.getElementById("add-category-form"),
+        emptyBoardHintEl: document.getElementById("empty-board-hint")
       };
 
-      exportSortResult(sortResult);
+      document.getElementById("add-category-button").addEventListener("click", function () {
+        const input = document.getElementById("new-category-label");
+        addParticipantCategory(input.value);
+        input.value = "";
+      });
 
-      document.getElementById("sort-view").style.display = "none";
-      document.getElementById("complete-view").style.display = "block";
-    });
+      let participantId = "";
+      let startedAt = null;
+
+      document.getElementById("start-button").addEventListener("click", function () {
+        const input = document.getElementById("participant-id").value.trim();
+        if (!input) {
+          alert("Please enter your name or ID before starting.");
+          return;
+        }
+        participantId = input;
+        startedAt = new Date().toISOString();
+
+        document.getElementById("name-entry-view").style.display = "none";
+        document.getElementById("sort-view").style.display = "block";
+
+        renderSort(studyConfig, elements);
+      });
+
+      elements.submitButtonEl.addEventListener("click", function () {
+        const completedAt = new Date().toISOString();
+        const durationSeconds = Math.round((new Date(completedAt) - new Date(startedAt)) / 1000);
+
+        const sortResult = {
+          studyName: studyConfig.studyName,
+          mode: studyConfig.mode,
+          participantId: participantId,
+          startedAt: startedAt,
+          completedAt: completedAt,
+          durationSeconds: durationSeconds,
+          placements: getPlacements()
+        };
+
+        exportSortResult(sortResult);
+
+        document.getElementById("sort-view").style.display = "none";
+        document.getElementById("complete-view").style.display = "block";
+      });
+    }
   </script>
 </body>
 </html>
