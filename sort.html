@@ -6,18 +6,33 @@
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-  <h1 id="study-name"></h1>
-  <p id="instructions"></p>
-
-  <div class="board">
-    <div id="card-pile"></div>
-    <div id="category-board" class="board"></div>
+  <div id="name-entry-view">
+    <h1>Before you start</h1>
+    <label for="participant-id">Your name or ID</label><br>
+    <input type="text" id="participant-id" autocomplete="off">
+    <button id="start-button">Start Sorting</button>
   </div>
 
-  <button id="submit-button" disabled>Submit</button>
+  <div id="sort-view" style="display: none;">
+    <h1 id="study-name"></h1>
+    <p id="instructions"></p>
+
+    <div class="board">
+      <div id="card-pile"></div>
+      <div id="category-board" class="board"></div>
+    </div>
+
+    <button id="submit-button" disabled>Submit</button>
+  </div>
+
+  <div id="complete-view" style="display: none;">
+    <h1>Thanks for participating!</h1>
+    <p>Your results file has been downloaded. Please send it to the researcher who shared this link with you.</p>
+  </div>
 
   <script src="js/studyConfig.js"></script>
   <script src="js/sortEngine.js"></script>
+  <script src="js/exportResults.js"></script>
   <script>
     const HARDCODED_CONFIG = {
       version: 1,
@@ -48,7 +63,43 @@
       submitButtonEl: document.getElementById("submit-button")
     };
 
-    renderSort(HARDCODED_CONFIG, elements);
+    let participantId = "";
+    let startedAt = null;
+
+    document.getElementById("start-button").addEventListener("click", function () {
+      const input = document.getElementById("participant-id").value.trim();
+      if (!input) {
+        alert("Please enter your name or ID before starting.");
+        return;
+      }
+      participantId = input;
+      startedAt = new Date().toISOString();
+
+      document.getElementById("name-entry-view").style.display = "none";
+      document.getElementById("sort-view").style.display = "block";
+
+      renderSort(HARDCODED_CONFIG, elements);
+    });
+
+    elements.submitButtonEl.addEventListener("click", function () {
+      const completedAt = new Date().toISOString();
+      const durationSeconds = Math.round((new Date(completedAt) - new Date(startedAt)) / 1000);
+
+      const sortResult = {
+        studyName: HARDCODED_CONFIG.studyName,
+        mode: HARDCODED_CONFIG.mode,
+        participantId: participantId,
+        startedAt: startedAt,
+        completedAt: completedAt,
+        durationSeconds: durationSeconds,
+        placements: getPlacements()
+      };
+
+      exportSortResult(sortResult);
+
+      document.getElementById("sort-view").style.display = "none";
+      document.getElementById("complete-view").style.display = "block";
+    });
   </script>
 </body>
 </html>
