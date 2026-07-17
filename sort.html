@@ -25,13 +25,15 @@
 
     <div class="sort-layout">
       <div id="card-pile"></div>
-      <div id="category-board"></div>
-    </div>
+      <div id="category-area">
+        <div id="category-board"></div>
 
-    <p id="empty-board-hint" style="display: none;">Add at least one category to get started.</p>
-    <div id="add-category-form" style="display: none;">
-      <input type="text" id="new-category-label" placeholder="New category name" aria-label="New category name" autocomplete="off">
-      <button id="add-category-button" type="button">Add Category</button>
+        <p id="empty-board-hint" style="display: none;">Add at least one category to get started.</p>
+        <div id="add-category-form" style="display: none;">
+          <input type="text" id="new-category-label" placeholder="New category name" aria-label="New category name" autocomplete="off">
+          <button id="add-category-button" type="button">Add Category</button>
+        </div>
+      </div>
     </div>
 
     <button id="submit-button" disabled>Submit</button>

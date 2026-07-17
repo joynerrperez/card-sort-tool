@@ -81,9 +81,13 @@ function buildCategoryColumn(category, categorySource) {
   columnEl.setAttribute("role", "button");
   columnEl.setAttribute("aria-label", "Place selected card in " + category.label);
 
+  const headerRowEl = document.createElement("div");
+  headerRowEl.className = "category-header-row";
+
   const headerEl = document.createElement("h3");
   headerEl.textContent = category.label;
-  columnEl.appendChild(headerEl);
+  headerRowEl.appendChild(headerEl);
+  columnEl.appendChild(headerRowEl);
 
   const cardsEl = document.createElement("div");
   cardsEl.className = "category-cards";
@@ -93,6 +97,10 @@ function buildCategoryColumn(category, categorySource) {
   dropZoneEl.className = "drop-zone";
   dropZoneEl.textContent = "Place selected card here";
   cardsEl.appendChild(dropZoneEl);
+
+  if (categorySource === "participant") {
+    headerRowEl.appendChild(buildCategoryControls(category, columnEl, headerEl, cardsEl));
+  }
 
   function place() {
     placeSelectedCard(category.id, category.label, categorySource, cardsEl);
@@ -107,6 +115,60 @@ function buildCategoryColumn(category, categorySource) {
   });
 
   return columnEl;
+}
+
+function buildCategoryControls(category, columnEl, headerEl, cardsEl) {
+  const controlsEl = document.createElement("span");
+  controlsEl.className = "category-controls";
+
+  const editButtonEl = document.createElement("button");
+  editButtonEl.type = "button";
+  editButtonEl.className = "category-control-button";
+  editButtonEl.textContent = "Edit";
+  editButtonEl.setAttribute("aria-label", "Rename " + category.label);
+
+  const deleteButtonEl = document.createElement("button");
+  deleteButtonEl.type = "button";
+  deleteButtonEl.className = "category-control-button";
+  deleteButtonEl.textContent = "Delete";
+  deleteButtonEl.setAttribute("aria-label", "Delete " + category.label);
+
+  editButtonEl.addEventListener("click", function (event) {
+    event.stopPropagation();
+    const newLabel = window.prompt("Rename category", category.label);
+    if (newLabel === null) return;
+    const trimmed = newLabel.trim();
+    if (!trimmed) return;
+
+    category.label = trimmed;
+    headerEl.textContent = trimmed;
+    columnEl.setAttribute("aria-label", "Place selected card in " + trimmed);
+    editButtonEl.setAttribute("aria-label", "Rename " + trimmed);
+    deleteButtonEl.setAttribute("aria-label", "Delete " + trimmed);
+
+    Object.keys(placements).forEach(function (cardId) {
+      if (placements[cardId].categoryId === category.id) {
+        placements[cardId].categoryLabel = trimmed;
+      }
+    });
+  });
+
+  deleteButtonEl.addEventListener("click", function (event) {
+    event.stopPropagation();
+
+    cardsEl.querySelectorAll(".card").forEach(function (cardEl) {
+      delete placements[cardEl.dataset.cardId];
+      engineElements.pileEl.appendChild(cardEl);
+    });
+
+    columnEl.remove();
+    updateEmptyBoardHint();
+    updateSubmitState();
+  });
+
+  controlsEl.appendChild(editButtonEl);
+  controlsEl.appendChild(deleteButtonEl);
+  return controlsEl;
 }
 
 function selectCard(cardEl) {

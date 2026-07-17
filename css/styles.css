@@ -49,13 +49,19 @@ h1 {
   border-radius: 8px;
 }
 
+#category-area {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  flex: 1;
+  min-width: 0;
+}
+
 #category-board {
   display: flex;
   gap: 1.5rem;
   align-items: flex-start;
   flex-wrap: wrap;
-  flex: 1;
-  min-width: 0;
 }
 
 .category-column {
@@ -67,6 +73,28 @@ h1 {
 
 .category-column h3 {
   margin-top: 0;
+}
+
+.category-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.category-controls {
+  display: flex;
+  gap: 0.4rem;
+  flex-shrink: 0;
+}
+
+.category-control-button {
+  padding: 0.2rem 0.5rem;
+  font-size: 0.75rem;
+  border: 1px solid #94a3b8;
+  border-radius: 4px;
+  background: white;
+  cursor: pointer;
 }
 
 .category-cards {
@@ -186,7 +214,7 @@ h1 {
     width: 100%;
   }
 
-  #category-board {
+  #category-area {
     width: 100%;
   }
 
